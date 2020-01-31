@@ -1,0 +1,5 @@
+REGION=$(gcloud config list | awk -F'=' '/region/ { print $2 }'
+ZONE=$(gcloud config list | awk -F'=' '/zone/ { print $2 }'
+ACCOUNT=$(gcloud config list | awk -F'=' '/project/ { print $2 }')
+PROJECT_ID=$(gcloud config list | awk -F'=' '/project/ { print $2 }')
+
