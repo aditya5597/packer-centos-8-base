@@ -1,0 +1,6 @@
+sa.json
+secrets.json
+**.orig
+**tmp
+**.swp
+.vscode

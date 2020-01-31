@@ -1,0 +1,12 @@
+---
+- name: "Packer Centos 8 Base image, security updates only"
+  hosts: localhost
+  vars:
+    "security_updates": true
+  tasks:
+    - name: Upgrade security patches
+      dnf: 
+        name: '*'
+        state: latest
+        security: "{{ security_updates }}"
+    

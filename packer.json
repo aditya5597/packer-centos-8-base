@@ -1,0 +1,54 @@
+{
+  "variables": {
+    "date": "{{isotime \"2006-01-02\"}}",
+    "image_version": "v001",
+    "image_description ": "packer-image",
+    "image_family": "nyuhpc-centos-8",
+    "source_image_family": "centos-8",
+    "image_role": "base",
+    "playbook": "centos-8-base-full",
+    "project_id": "hpc-image-builder",
+    "os_name": "centos",
+    "os_version": "8",
+    "ssh_user": "packer",
+    "zone": "us-central1-a"
+  },
+
+  "builders": [
+    {
+      "type": "googlecompute",
+      "image_name": "{{ user `playbook` }}-{{ user `date` }}-{{ user `image_version` }}",
+      "source_image_family": "{{ user `source_image_family` }}",
+      "image_family": "{{ user `image_family` }}",
+      "project_id": "{{ user `project_id` }}",
+      "source_image_family": "{{ user `os_name` }}-{{ user `os_version` }}",
+      "zone": "{{ user `zone` }}",
+      "ssh_username": "{{ user `ssh_user` }}",
+      "account_file": "secrets.json"
+    }
+  ],
+      "provisioners" : [
+      {
+        "type": "shell",
+        "inline": [ "sudo dnf -y install epel-release" ]
+      },
+      {
+        "type": "shell",
+        "inline": [ 
+          "sleep 10",
+          "sudo dnf -y install ansible" 
+        ]
+      },
+      {
+        "type": "ansible-local",
+        "playbook_file": "ansible/playbooks/{{ user `playbook` }}.yml",
+        "playbook_dir": "./ansible",
+        "playbook_paths": [ "./ansible/playbooks" ],
+        "role_paths": [
+          "./ansible/roles",
+          "./ansible/roles/local"
+        ],
+        "clean_staging_directory": true
+      }
+    ]
+}

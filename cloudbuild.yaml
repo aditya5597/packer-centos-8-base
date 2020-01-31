@@ -1,0 +1,19 @@
+# Perform a Packer build based on the `packer.json` configuration. This Packer
+# build creates a GCE image.
+steps:
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - kms
+  - decrypt
+  - --ciphertext-file=secrets.enc
+  - --plaintext-file=secrets.json
+  - --location=global
+  - --keyring=packer
+  - --key=packer
+- name: 'gcr.io/$PROJECT_ID/packer'
+  args:
+  - build
+  - -var
+  - project_id=$PROJECT_ID
+  - packer.json
+tags: ['packer-gce-goss']
