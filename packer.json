@@ -1,7 +1,7 @@
 {
   "variables": {
     "date": "{{isotime \"2006-01-02\"}}",
-    "image_version": "v001",
+    "image_version": "v002",
     "image_description ": "packer-image",
     "image_family": "nyuhpc-centos-8",
     "source_image_family": "centos-8",
