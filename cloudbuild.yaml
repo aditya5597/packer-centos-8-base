@@ -16,4 +16,5 @@ steps:
   - -var
   - project_id=$PROJECT_ID
   - packer.json
+timeout: 1200s
 tags: ['packer-gce-goss']
