@@ -3,7 +3,7 @@
     "build_type": "full",
     "date": "{{isotime \"2006-01-02\"}}",
     "image_role": "base",
-    "image_version": "2",
+    "image_version": "3",
     "image_description ": "packer-image",
     "image_family": "nyuhpc-centos-8",
     "os_name": "centos",
