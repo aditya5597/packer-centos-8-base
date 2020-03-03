@@ -1,9 +1,9 @@
 {
   "variables": {
-    "build_type": "full",
+    "build_type": "sec",
     "date": "{{isotime \"2006-01-02\"}}",
     "image_role": "base",
-    "image_version": "5",
+    "image_version": "6",
     "image_description ": "packer-image",
     "image_family": "nyuhpc-centos-8",
     "os_name": "centos",
