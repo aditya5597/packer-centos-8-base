@@ -1,0 +1,37 @@
+---
+- name: "Packer Centos 8 Base image, security updates only"
+  hosts: localhost
+  vars:
+    go_path: "/opt/go"
+    golang_version: '1.13.8'
+    golang_mirror: 'https://storage.googleapis.com/golang'
+    golang_install_dir: '/opt/go/{{ golang_version }}'
+    golang_download_dir: "{{ x_ansible_download_dir | default(ansible_env.HOME + '/.ansible/tmp/downloads') }}"
+    golang_gopath: "{{ go_path }}/{{ golang_version }}"
+    ntp_config_file: "/etc/chrony.conf"
+    ntp_daemon: "chronyd"
+    ntp_manage_config: false
+    ntp_package: "chrony"
+    ntp_restrict:
+      - "127.0.0.1"
+      - "::1"
+    ntp_servers:
+      - "0{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+      - "1{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+      - "2{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+      - "3{{ '.' + ntp_area if ntp_area else '' }}.pool.ntp.org iburst"
+    ntp_timezone: America/New_York
+
+  tasks:
+    - name: Update packages
+      dnf: 
+        name: '*'
+        state: latest
+        #security: "{{ security_updates }}"
+
+  roles:
+    - housekeeping
+    - ntp
+    - role: golang
+      golang_path: "{{ go_path }}"
+    

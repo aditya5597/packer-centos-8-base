@@ -1,9 +1,9 @@
 {
   "variables": {
-    "build_type": "sec",
     "date": "{{isotime \"2006-01-02\"}}",
+    "disk_size": "20",
     "image_role": "base",
-    "image_version": "6",
+    "image_version": "13",
     "image_description ": "packer-image",
     "image_family": "nyuhpc-centos-8",
     "os_name": "centos",
@@ -18,7 +18,8 @@
     {
       "type": "googlecompute",
       "account_file": "account.json",
-      "image_name": "{{ user `os_name` }}-{{ user `os_version` }}-{{ user `image_role` }}-{{ user `build_type` }}-{{ user `date` }}-v{{ user `image_version` }}",
+      "disk_size": "{{ user `disk_size` }}",
+      "image_name": "{{ user `os_name` }}-{{ user `os_version` }}-{{ user `image_role` }}-{{ user `date` }}-v{{ user `image_version` }}",
       "image_family": "{{ user `image_family` }}",
       "project_id": "{{ user `project_id` }}",
       "ssh_username": "{{ user `ssh_user` }}",
@@ -41,11 +42,36 @@
       },
       {
         "type": "shell",
-        "inline": [ "sudo dnf -y config-manager --disablerepo epel" ]
+        "inline": [ "sudo dnf -y config-manager --disable epel" ]
+      },
+      {
+        "type": "file",
+        "source": "github_known_hosts",
+        "destination": "/tmp/github_known_hosts"
+      },
+      {
+        "type": "shell",
+        "inline":  "cat /tmp/github_known_hosts >> ~/.ssh/known_hosts"
+      },
+      {
+        "type": "file",
+        "source": "id_rsa",
+        "destination": "/tmp/id_rsa"
+      },
+      {
+        "type": "shell",
+        "inline": [
+          "cp /tmp/id_rsa ~/.ssh/id_rsa",
+          "chmod 600 ~/.ssh/id_rsa"
+        ]
+      },
+      {
+        "type": "shell-local",
+        "command": "ansible-galaxy install -r ./ansible/requirements.yml -p ./ansible/roles/ -f "
       },
       {
         "type": "ansible-local",
-        "playbook_file": "ansible/playbooks/{{ user `os_name` }}-{{ user `os_version` }}-{{ user `image_role` }}-{{ user `build_type` }}.yml",
+        "playbook_file": "ansible/playbooks/{{ user `os_name` }}-{{ user `os_version` }}-{{ user `image_role` }}.yml",
         "playbook_dir": "./ansible",
         "playbook_paths": [ "./ansible/playbooks" ],
         "role_paths": [
