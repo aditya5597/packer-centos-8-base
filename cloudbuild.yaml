@@ -1,46 +1,31 @@
-# Perform a Packer build based on the `packer.json` configuration. This Packer
-# build creates a GCE image.
+# Perform a Packer build based on the `packer.json` configuration. 
 # # To run the build manually do the following,
 #      $ `gcloud builds submit --config=cloudbuild.yaml .`
 #
 
 steps:
+# Step 0
 - name: 'gcr.io/cloud-builders/gcloud'
-  args:
-  - kms
-  - decrypt
-  - --ciphertext-file=account.enc
-  - --plaintext-file=account.json
-  - --location=global
-  - --keyring=packer
-  - --key=packer
-
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=account --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > account.json" ]
+      
+# Step 1
 - name: 'gcr.io/cloud-builders/gcloud'
-  args:
-    - kms
-    - decrypt
-    - --ciphertext-file=hpc_etc_id_rsa.enc
-    - --plaintext-file=/root/.ssh/id_rsa
-    - --location=global
-    - --keyring=packer
-    - --key=packer
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=hpc_etc_id_rsa --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > /root/.ssh/id_rsa" ]
   volumes:
     - name: 'ssh'
       path: /root/.ssh
 
+# Step 2
 - name: 'gcr.io/cloud-builders/gcloud'
-  args:
-    - kms
-    - decrypt
-    - --ciphertext-file=hpc_etc_id_rsa.enc
-    - --plaintext-file=id_rsa
-    - --location=global
-    - --keyring=packer
-    - --key=packer
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=hpc_etc_id_rsa --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > id_rsa" ]
   volumes:
     - name: 'ssh'
       path: /root/.ssh
 
+# Step 3
 - name: 'gcr.io/cloud-builders/git'
   entrypoint: 'bash'
   args:
@@ -56,12 +41,16 @@ steps:
     - name: 'ssh'
       path: /root/.ssh
 
+# Step 4
 - name: 'gcr.io/$PROJECT_ID/packer'
   args:
   - build
   - -var
   - project_id=$PROJECT_ID
   - packer.json
+  volumes:
+    - name: 'ssh'
+      path: /root/.ssh
 
 timeout: 1200s
 tags: ['packer-gce-goss']
