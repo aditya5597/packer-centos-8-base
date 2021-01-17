@@ -7,7 +7,7 @@ steps:
 # Step 0
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=account --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > account.json" ]
+  args: [ '-c', "gcloud secrets versions access latest --secret=service-account --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > account.json" ]
       
 # Step 1
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -45,12 +45,28 @@ steps:
 - name: 'gcr.io/$PROJECT_ID/packer'
   args:
   - build
+  - -debug
   - -var
   - project_id=$PROJECT_ID
+  - -var
+  - subnetwork=${_SUBNETWORK}
+  - -var
+  - service_account_email=image-builder@hpc-image-builder-dev-2acb.iam.gserviceaccount.com
   - packer.json
+  env:
+    - 'PACKER_LOG=1'
   volumes:
     - name: 'ssh'
       path: /root/.ssh
+    
+#
+#subsitutions:
+#  _SUBNETWORK: hpc-image-builder-dev-2acb-subnet-01
+#options:
+#  #substitution_options: 'ALLOW_LOOSE'
+#  dynamic_substitutions: true
+#  env:
+#    - SUBNETWORK=$_SUBNETWORK
 
-timeout: 1200s
+timeout: 4800s
 tags: ['packer-gce-goss']

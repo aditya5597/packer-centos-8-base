@@ -1,16 +1,21 @@
 {
   "variables": {
     "date": "{{isotime \"2006-01-02\"}}",
+    "disable_default_service_account": "false",
     "disk_size": "20",
     "image_role": "base",
-    "image_version": "13",
+    "image_version": "14",
     "image_description ": "packer-image",
     "image_family": "nyuhpc-centos-8",
+    "machine_type": "e2-standard-2",
     "os_name": "centos",
     "os_version": "8",
-    "project_id": "hpc-image-builder",
+    "project_id": "",
+    "service_account_email": "",
     "source_image_family": "centos-8",
     "ssh_user": "packer",
+    "subnetwork": "",
+    "tags": "packer",
     "zone": "us-central1-a"
   },
 
@@ -18,13 +23,18 @@
     {
       "type": "googlecompute",
       "account_file": "account.json",
+      "disable_default_service_account": "{{ user `disable_default_service_account` }}",
       "disk_size": "{{ user `disk_size` }}",
       "image_name": "{{ user `os_name` }}-{{ user `os_version` }}-{{ user `image_role` }}-{{ user `date` }}-v{{ user `image_version` }}",
       "image_family": "{{ user `image_family` }}",
+      "machine_type": "{{ user `machine_type` }}",
       "project_id": "{{ user `project_id` }}",
+      "service_account_email": "{{ user `service_account_email` }}",
       "ssh_username": "{{ user `ssh_user` }}",
       "source_image_family": "{{ user `os_name` }}-{{ user `os_version` }}",
       "state_timeout": "8m",
+      "subnetwork": "{{ user `subnetwork` }}",
+      "tags": "{{ user `tags` }}",
       "zone": "{{ user `zone` }}"
     }
   ],
