@@ -1,6 +1,6 @@
 {
   "variables": {
-    "date": "{{isotime \"2006-01-02\"}}",
+    "date": "{{isotime \"20060102\"}}",
     "disable_default_service_account": "false",
     "disk_size": "20",
     "image_role": "base",
