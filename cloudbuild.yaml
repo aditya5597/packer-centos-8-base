@@ -51,7 +51,7 @@ steps:
   - -var
   - subnetwork=${_SUBNETWORK}
   - -var
-  - service_account_email=image-builder@hpc-image-builder-dev-2acb.iam.gserviceaccount.com
+  - service_account_email=image-builder@${PROJECT_ID}.iam.gserviceaccount.com
   - packer.json
   env:
     - 'PACKER_LOG=1'
