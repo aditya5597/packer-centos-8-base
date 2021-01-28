@@ -1,5 +1,6 @@
 PROJECT_ID=$(shell gcloud config list --format 'value(core.project)')
 PROJECT_NAME=$(shell gcloud projects describe ${PROJECT_ID} --format='value(name)')
+DATE=$(shell date +%y%m%d%h%s)
 
 .PHONY: build
 build:
