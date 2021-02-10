@@ -45,7 +45,6 @@ steps:
 - name: 'gcr.io/$PROJECT_ID/packer'
   args:
   - build
-  - -debug
   - -var
   - project_id=$PROJECT_ID
   - -var
@@ -54,7 +53,7 @@ steps:
   - service_account_email=image-builder@${PROJECT_ID}.iam.gserviceaccount.com
   - packer.json
   env:
-    - 'PACKER_LOG=1'
+    #- 'PACKER_LOG=1'
   volumes:
     - name: 'ssh'
       path: /root/.ssh
