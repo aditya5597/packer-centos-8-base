@@ -1,11 +1,14 @@
 [Unit]
 Description=GPU Utilization Metric Agent
+
 [Service]
+ExecStartPre=/bin/sh -c '/usr/sbin/set -e lspci | grep NVIDIA 2>&1 1>/dev/null ; [[ $? != 0 ]] && exit 1'
 PIDFile=/run/gpu_agent.pid
 ExecStart=/bin/bash --login -c '/usr/bin/python /root/report_gpu_metrics.py'
 User=root
 Group=root
 WorkingDirectory=/
 Restart=always
+
 [Install]
 WantedBy=multi-user.target
