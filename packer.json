@@ -4,7 +4,7 @@
     "disable_default_service_account": "false",
     "disk_size": "20",
     "image_role": "base",
-    "image_version": "29",
+    "image_version": "36",
     "image_description ": "packer-image",
     "image_family": "nyuhpc-centos-8",
     "machine_type": "e2-standard-2",
