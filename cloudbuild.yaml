@@ -7,7 +7,10 @@ steps:
 # Step 0
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=account --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > account.json" ]
+  args:  
+  - -c 
+  - |
+    gcloud secrets versions access latest --secret=account --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > account.json
       
 # Step 1
 - name: 'gcr.io/cloud-builders/gcloud'
@@ -42,9 +45,10 @@ steps:
       path: /root/.ssh
 
 # Step 4
-- name: 'gcr.io/$PROJECT_ID/packer'
+- name: 'gcr.io/$PROJECT_ID/packer:1.7.2'
   args:
   - build
+  - -debug
   - -var
   - project_id=$PROJECT_ID
   - -var
@@ -53,7 +57,7 @@ steps:
   - service_account_email=image-builder@${PROJECT_ID}.iam.gserviceaccount.com
   - packer.json
   env:
-    #- 'PACKER_LOG=1'
+    - 'PACKER_LOG=1'
   volumes:
     - name: 'ssh'
       path: /root/.ssh
