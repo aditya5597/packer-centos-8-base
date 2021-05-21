@@ -1,3 +1,7 @@
+variable "image_version" {
+  type    = string
+  default = "40"
+}
 
 variable "disable_default_service_account" {
   type    = string
@@ -9,7 +13,7 @@ variable "disk_size" {
   default = "20"
 }
 
-variable "image_description " {
+variable "image_description" {
   type    = string
   default = "packer-image"
 }
@@ -22,11 +26,6 @@ variable "image_family" {
 variable "image_role" {
   type    = string
   default = "base"
-}
-
-variable "image_version" {
-  type    = string
-  default = "39"
 }
 
 variable "machine_type" {
@@ -70,8 +69,8 @@ variable "subnetwork" {
 }
 
 variable "tags" {
-  type    = string
-  default = "packer"
+  type    = list(string)
+  default = ["packer",]
 }
 
 variable "test_image_family" {
@@ -131,7 +130,7 @@ build {
   }
 
   provisioner "shell" {
-    inline = "cat /tmp/github_known_hosts >> ~/.ssh/known_hosts"
+    inline = [ "cat /tmp/github_known_hosts >> ~/.ssh/known_hosts" ]
   }
 
   provisioner "file" {
@@ -144,7 +143,7 @@ build {
   }
 
   provisioner "shell-local" {
-    command = "ansible-galaxy install -r ./ansible/requirements.yml -p ./ansible/roles/ -f "
+    command =  "ansible-galaxy install -r ./ansible/requirements.yml -p ./ansible/roles/ -f " 
   }
 
   provisioner "ansible-local" {

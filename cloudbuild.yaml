@@ -55,7 +55,7 @@ steps:
   - subnetwork=${_SUBNETWORK}
   - -var
   - service_account_email=image-builder@${PROJECT_ID}.iam.gserviceaccount.com
-  - packer.json
+  - packer.pkr.hcl
   env:
     - 'PACKER_LOG=1'
   volumes:
