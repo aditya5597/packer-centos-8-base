@@ -1,0 +1,67 @@
+# Perform a Packer build based on the `packer.json` configuration. 
+# # To run the build manually do the following,
+#      $ `gcloud builds submit --config=cloudbuild.yaml .`
+#
+
+steps:
+# Step 0
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:  
+  - -c 
+  - |
+    gcloud secrets versions access latest --secret=account --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > account.json
+      
+# Step 1
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=hpc_etc_id_rsa --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > /root/.ssh/id_rsa" ]
+  volumes:
+    - name: 'ssh'
+      path: /root/.ssh
+
+# Step 2
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args: [ '-c', "gcloud secrets versions access latest --secret=hpc_etc_id_rsa --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > id_rsa" ]
+  volumes:
+    - name: 'ssh'
+      path: /root/.ssh
+
+# Step 3
+- name: 'gcr.io/cloud-builders/git'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    chmod 600 /root/.ssh/id_rsa
+    cat <<EOF >/root/.ssh/config
+    Hostname github.com
+    IdentityFile /root/.ssh/id_rsa
+    EOF
+    cp -p github_known_hosts /root/.ssh/known_hosts
+  volumes:
+    - name: 'ssh'
+      path: /root/.ssh
+
+# Step 4
+- name: 'gcr.io/$PROJECT_ID/packer:1.7.2'
+  args:
+  - build
+  - -debug
+  - -var
+  - project_id=$PROJECT_ID
+  - -var
+  - subnetwork=${_SUBNETWORK}
+  - -var
+  - service_account_email=image-builder@${PROJECT_ID}.iam.gserviceaccount.com
+  - centos-8-4-2105.pkr.hcl
+  env:
+    - 'PACKER_LOG=1'
+  volumes:
+    - name: 'ssh'
+      path: /root/.ssh
+    
+
+timeout: 4800s
+tags: ['packer-gce-goss']
