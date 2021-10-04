@@ -35,7 +35,7 @@ variable "image_description" {
 
 variable "image_family" {
   type    = string
-  default = "nyuhpc-centos-8"
+  default = "ac9025-centos-8"
 }
 
 variable "image_role" {
@@ -108,7 +108,7 @@ source "googlecompute" "centos-8-4-2105" {
   disable_default_service_account = "${var.disable_default_service_account}"
   disk_size                       = "${var.disk_size}"
   image_family                    = "${var.image_family}"
-  image_name                      = "${var.os_name}-${var.os_release}-v${local.date}"
+  image_name                      = "ac9025-${var.os_name}-${var.os_release}-v${local.date}"
   machine_type                    = "${var.machine_type}"
   project_id                      = "${var.project_id}"
   service_account_email           = "${var.service_account_email}"
