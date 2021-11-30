@@ -53,17 +53,17 @@ variable "os_name" {
   default = "centos"
 }
 
-variable "os_major_number" {
+variable "os_major_number"{
   type    = string
   default = "8"
 }
 
-variable "os_minor_number" {
+variable "os_minor_number"{
   type    = string
   default = "4"
 }
 
-variable "os_build_month" {
+variable "os_build_month"{
   type    = string
   default = "2105"
 }
@@ -105,7 +105,7 @@ variable "tags" {
 
 variable "test_image_family" {
   type    = string
-  default = "nyuhpc-centos-8"
+  default = "ac9025-nyuhpc-centos-8"
 }
 
 variable "zone" {
@@ -117,7 +117,6 @@ variable "zone" {
 locals {
   date       = "${legacy_isotime("20060102")}"
   os_version = "${var.os_major_number}.${var.os_minor_number}.${var.os_build_month}"
-  os_release = "${var.os_major_number}-${var.os_minor_number}-${var.os_build_month}"
 }
 
 source "googlecompute" "centos-8-4-2105" {
@@ -125,7 +124,7 @@ source "googlecompute" "centos-8-4-2105" {
   disable_default_service_account = "${var.disable_default_service_account}"
   disk_size                       = "${var.disk_size}"
   image_family                    = "${var.image_family}"
-  image_name                      = "ac9025-test-${var.os_name}-${var.os_release}-v${local.date}"
+  image_name                      = "ac9025-inspec-${var.os_name}-${var.os_release}-v${local.date}"
   machine_type                    = "${var.machine_type}"
   project_id                      = "${var.project_id}"
   service_account_email           = "${var.service_account_email}"
@@ -137,7 +136,6 @@ source "googlecompute" "centos-8-4-2105" {
   subnetwork                      = "${var.subnetwork}"
   tags                            = "${var.tags}"
   zone                            = "${var.zone}"
-  wait_to_add_ssh_keys            = "20s"
 }
 
 build {
@@ -163,6 +161,20 @@ build {
     destination = "/tmp/github_known_hosts"
     source      = "github_known_hosts"
   }
+  
+  provisioner "shell-local" {
+    command = "echo 'Before git clone ---------------------------___________________________'"
+  }
+  
+  provisioner "shell-local" {
+    command = "git clone --single-branch --branch ${local.os_version} git@github.com:aditya5597/centos-prebuild.git"
+  }
+
+  provisioner "inspec" {
+    inspec_env_vars = ["CHEF_LICENSE=accept"]
+    profile         = "./centos-prebuild"
+    extra_arguments = [ "-l", "debug" ]
+  }
 
   provisioner "shell" {
     inline = [ "cat /tmp/github_known_hosts >> ~/.ssh/known_hosts" ]
@@ -178,7 +190,7 @@ build {
   }
 
   provisioner "shell-local" {
-    command =  "/usr/local/bin/venv_3.8/bin/ansible-galaxy install -r ./ansible/requirements.yml -p ./ansible/roles/ -f " 
+    command =  "ansible-galaxy install -r ./ansible/requirements.yml -p ./ansible/roles/ -f " 
   }
 
   provisioner "ansible-local" {
@@ -187,20 +199,6 @@ build {
     playbook_file           = "ansible/playbooks/${var.os_name}-${var.os_release}.yml"
     playbook_paths          = ["./ansible/playbooks"]
     role_paths              = ["./ansible/roles", "./ansible/roles/local"]
-  }
-
-  provisioner "shell-local" {
-    command = "echo 'Before git clone -------------------_______________________'"
-  }
-
-  provisioner "shell-local" {
-    command = "git clone --single-branch --branch ${local.os_version} git@hithub.com:aditya5597/centos-prebuild.git"
-  }
-
-  provisioner "inspec" {
-    inspec_env_vars = [ "CHEF_LICENSE=accept" ]
-    profile         = "./centos-prebuild"
-    extra_arguments = [ "-l", "debug" ]
   }
 
 }

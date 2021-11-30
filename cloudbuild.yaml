@@ -45,7 +45,7 @@ steps:
       path: /root/.ssh
 
 # Step 4
-- name: 'gcr.io/$PROJECT_ID/packer:1.7.2'
+- name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
   args:
   - build
   - -debug
