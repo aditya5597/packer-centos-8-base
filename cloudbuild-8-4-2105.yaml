@@ -54,7 +54,7 @@ steps:
   - -var
   - subnetwork=${_SUBNETWORK}
   - -var
-  - service_account_email=image-builder@${PROJECT_ID}.iam.gserviceaccount.com
+  - service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com
   - centos-8-4-2105.pkr.hcl
   env:
     - 'PACKER_LOG=1'
