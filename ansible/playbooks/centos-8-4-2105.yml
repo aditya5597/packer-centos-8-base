@@ -30,7 +30,7 @@
         #security: "{{ security_updates }}"
 
   roles:
-    - housekeeping
+#    - housekeeping
     - ntp
     - role: golang
       golang_path: "{{ go_path }}"

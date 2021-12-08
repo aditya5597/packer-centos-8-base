@@ -1,8 +1,8 @@
 ---
 # Private repos are no longer located here
-- src: git+git@github.com:nyuhpc/ansible-role-housekeeping
-  version: master
-  name: housekeeping
+#- src: git+git@github.com:nyuhpc/ansible-role-housekeeping
+#  version: master
+#  name: housekeeping
 
 - src: https://github.com/geerlingguy/ansible-role-ntp
   version: 2.2.0
