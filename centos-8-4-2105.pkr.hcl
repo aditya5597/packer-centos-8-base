@@ -100,7 +100,7 @@ variable "subnetwork" {
 
 variable "tags" {
   type    = list(string)
-  default = ["packer",]
+  default = ["packer","ssh",]
 }
 
 variable "test_image_family" {
