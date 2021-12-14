@@ -114,7 +114,7 @@ variable "zone" {
 }
 # The "legacy_isotime" function has been provided for backwards compatability, but we recommend switching to the timestamp and formatdate functions.
 
-local {
+locals {
   date       = "${legacy_isotime("20060102")}"
   os_version = "${var.os_major_number}.${var.os_minor_number}.${var.os_build_month}"
   os_release = "${var.os_major_number}-${var.os_minor_number}-${var.os_build_month}"
