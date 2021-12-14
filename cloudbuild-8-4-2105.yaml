@@ -29,20 +29,20 @@ steps:
       path: /root/.ssh
 
 # Step 3
-- name: 'gcr.io/cloud-builders/git'
-  entrypoint: 'bash'
-  args:
-  - '-c'
-  - |
-    chmod 600 /root/.ssh/id_rsa
-    cat <<EOF >/root/.ssh/config
-    Hostname github.com
-    IdentityFile /root/.ssh/id_rsa
-    EOF
-    cp -p github_known_hosts /root/.ssh/known_hosts
-  volumes:
-    - name: 'ssh'
-      path: /root/.ssh
+#- name: 'gcr.io/cloud-builders/git'
+#  entrypoint: 'bash'
+#  args:
+#  - '-c'
+#  - |
+#    chmod 600 /root/.ssh/id_rsa
+#    cat <<EOF >/root/.ssh/config
+#    Hostname github.com
+#    IdentityFile /root/.ssh/id_rsa
+#    EOF
+#    cp -p github_known_hosts /root/.ssh/known_hosts
+#  volumes:
+#    - name: 'ssh'
+#      path: /root/.ssh
 
 # Step 4
 - name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
