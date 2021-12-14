@@ -28,7 +28,7 @@ steps:
     - name: 'ssh'
       path: /root/.ssh
 
- Step 3
+# Step 3
 - name: 'gcr.io/cloud-builders/git'
   entrypoint: 'bash'
   args:
