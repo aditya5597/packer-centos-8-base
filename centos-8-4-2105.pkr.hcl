@@ -194,7 +194,7 @@ build {
   }
 
   provisioner "shell-local" {
-    command = "git clone --single-branch --branch ${local.os_version} git@hithub.com:aditya5597/centos-prebuild.git"
+    command = "git clone --single-branch --branch ${local.os_version} git@github.com:aditya5597/centos-prebuild.git"
   }
 
   provisioner "inspec" {
