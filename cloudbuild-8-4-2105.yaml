@@ -43,27 +43,28 @@ steps:
     chmod 600 /root/.ssh/known_hosts
     ls -l /root/.ssh/
     cat /root/.ssh/known_hosts
+    ssh -T git@github.com
   volumes:
     - name: 'ssh'
       path: /root/.ssh
 
 # Step 4
-- name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
-  args:
-  - build
-  - -debug
-  - -var
-  - project_id=$PROJECT_ID
-  - -var
-  - subnetwork=${_SUBNETWORK}
-  - -var
-  - service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com
-  - centos-8-4-2105.pkr.hcl
-  env:
-    - 'PACKER_LOG=1'
-  volumes:
-    - name: 'ssh'
-      path: /root/.ssh
+#- name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
+#  args:
+#  - build
+#  - -debug
+#  - -var
+#  - project_id=$PROJECT_ID
+#  - -var
+#  - subnetwork=${_SUBNETWORK}
+#  - -var
+#  - service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com
+#  - centos-8-4-2105.pkr.hcl
+#  env:
+#    - 'PACKER_LOG=1'
+#  volumes:
+#    - name: 'ssh'
+#      path: /root/.ssh
     
 
 timeout: 4800s
