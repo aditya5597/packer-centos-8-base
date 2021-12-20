@@ -35,15 +35,14 @@ steps:
   - '-c'
   - |
     chmod 600 /root/.ssh/id_rsa
-    cat <<EOF >> /root/.ssh/config
+    cat <<EOF >/root/.ssh/config
     Hostname github.com
     IdentityFile /root/.ssh/id_rsa
     EOF
-    cp -p github_known_hosts /root/.ssh/known_hosts
+    cp github_known_hosts /root/.ssh/known_hosts
     chmod 600 /root/.ssh/known_hosts
     ls -l /root/.ssh/
-    cat /root/.ssh/id_rsa
-    ssh -T git@github.com
+    ssh -vT git@github.com
   volumes:
     - name: 'ssh'
       path: /root/.ssh
