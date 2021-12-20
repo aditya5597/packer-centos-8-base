@@ -3,10 +3,10 @@ variable "image_version" {
   default = "01"
 }
 
-variable "source_image" {
-  type    = string
-  default = "centos-8-v20210609"
-}
+#variable "source_image" {
+#  type    = string
+#  default = "centos-8-v20210609"
+#}
 
 variable "source_image_family" {
   type    = string
@@ -129,7 +129,6 @@ source "googlecompute" "centos-8-4-2105" {
   machine_type                    = "${var.machine_type}"
   project_id                      = "${var.project_id}"
   service_account_email           = "${var.service_account_email}"
-  source_image                    = "${var.source_image}"
   source_image_family             = "${var.source_image_family}"
   source_image_project_id         = "${var.source_image_project_id}"
   ssh_username                    = "${var.ssh_user}"
