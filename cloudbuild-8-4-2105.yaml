@@ -69,10 +69,6 @@ steps:
   - centos-8-4-2105.pkr.hcl
   env:
     - 'PACKER_LOG=1'
-  substitutions:
-      _IMAGE_NAME: cat latest_image.txt
-  options:
-      dynamic_substitutions: true
   volumes:
     - name: 'ssh'
       path: /root/.ssh
@@ -80,3 +76,7 @@ steps:
 
 timeout: 4800s
 tags: ['packer-gce-goss']
+substitutions:
+    _IMAGE_NAME: cat latest_image.txt
+options:
+    dynamic_substitutions: true
