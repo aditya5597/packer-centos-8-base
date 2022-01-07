@@ -23,13 +23,20 @@ steps:
 # Step 2
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
-  args: [ '-c', "gcloud secrets versions access latest --secret=hpc_etc_id_rsa --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > id_rsa",
-	"gcloud compute images describe-from-family centos-8 --project=centos-cloud --format='value(name)'>latest_image.txt", "ls","cat latest_image.txt" ]
+  args: [ '-c', "gcloud secrets versions access latest --secret=hpc_etc_id_rsa --format='get(payload.data)' | tr '_-' '/+' | base64 --decode > id_rsa" ]
   volumes:
     - name: 'ssh'
       path: /root/.ssh
 
 # Step 3
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args: ['-c','gcloud compute images describe-from-family centos-8 --project=centos-cloud --format='value(name)' > latest_image.txt"]
+  volumes:
+    - name: 'ssh'
+      path: /root/.ssh
+
+# Step 4
 - name: 'gcr.io/cloud-builders/git'
   entrypoint: 'bash'
   args:
@@ -46,13 +53,13 @@ steps:
     - name: 'ssh'
       path: /root/.ssh
 
-# Step 4
+# Step 5
 - name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
   args:
   - build
   - -debug
   - -var
-  - image_name = "${cat latest_image_txt}"
+  - image_name = "${cat latest_image.txt}"
   - -var
   - project_id=$PROJECT_ID
   - -var
