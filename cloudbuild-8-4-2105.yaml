@@ -59,7 +59,7 @@ steps:
   - build
   - -debug
   - -var
-  - image_name = "${cat latest_image.txt}"
+  - image_name = "$cat latest_image.txt"
   - -var
   - project_id=$PROJECT_ID
   - -var
