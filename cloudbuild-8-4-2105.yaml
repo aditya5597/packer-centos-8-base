@@ -31,7 +31,7 @@ steps:
 # Step 3
 - name: 'gcr.io/cloud-builders/gcloud'
   entrypoint: 'bash'
-  args: ['-c','gcloud compute images describe-from-family centos-8 --project=centos-cloud --format='value(name)' > latest_image.txt"]
+  args: ['-c','gcloud compute images describe-from-family centos-8 --project=centos-cloud --format='value(name)' > latest_image.txt']
   volumes:
     - name: 'ssh'
       path: /root/.ssh
