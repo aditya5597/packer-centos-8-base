@@ -59,7 +59,7 @@ steps:
   - build
   - -debug
   - -var
-  - image_name = -c | cat latest_image.txt
+  - image_name = ${_IMAGE_NAME}
   - -var
   - project_id=$PROJECT_ID
   - -var
@@ -69,6 +69,10 @@ steps:
   - centos-8-4-2105.pkr.hcl
   env:
     - 'PACKER_LOG=1'
+  substitutions:
+      _IMAGE_NAME: cat latest_image.txt
+  options:
+      dynamic_substitutions: true
   volumes:
     - name: 'ssh'
       path: /root/.ssh
