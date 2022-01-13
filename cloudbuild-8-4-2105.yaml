@@ -61,19 +61,12 @@ steps:
   args:
   - '-c'
   - |
+    cat latest_image.txt
     _IMAGE_NAME = $(cat latest_image.txt)
-  - packer
-  - build
-  - -debug
-  - -var
-  - image_name = $$(_IMAGE_NAME)
-  - -var
-  - project_id=$PROJECT_ID
-  - -var
-  - subnetwork=${_SUBNETWORK}
-  - -var
-  - service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com
-  - centos-8-4-2105.pkr.hcl
+    packer build -debug -var image_name = $$(_IMAGE_NAME) \
+    -var project_id=$PROJECT_ID -var subnetwork=${_SUBNETWORK} \
+    -var service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
+    centos-8-4-2105.pkr.hcl
   env:
     - 'PACKER_LOG=1'
   volumes:
