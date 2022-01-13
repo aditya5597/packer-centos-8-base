@@ -45,13 +45,23 @@ steps:
     - name: 'ssh'
       path: /root/.ssh
 
+- name: 'gcr.io/cloud-builders/gcloud'
+  entrypoint: 'bash'
+  args:
+  - '-c'
+  - |
+    gcloud compute images describe-from-family centos-8 --project=centos-cloud --format="value(name)" > latest_image.txt
+  volumes:
+  - name: 'ssh'
+    path: /root/.ssh
+
 # Step 4
 - name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
   entrypoint: 'bash'
   args:
   - '-c'
   - |
-    _IMAGE_NAME = $(gcloud compute images describe-from-family centos-8 --project=centos-cloud --format="value(name)")
+    _IMAGE_NAME = $(cat latest_image.txt)
   - packer
   - build
   - -debug
