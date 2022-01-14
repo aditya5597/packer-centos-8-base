@@ -57,11 +57,15 @@ steps:
 
 # Step 4
 - name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
+  entrypoint: /bin/bash
   args:
+  - '-c'
+  - |
+    IMAGE_NAME=$$(cat latest_image.txt)
   - build
   - -debug 
   - -var 
-  - image_name=$$(cat latest_image.txt)
+  - image_name=$${IMAGE_NAME}
   -  -var 
   - project_id=$PROJECT_ID 
   - -var 
