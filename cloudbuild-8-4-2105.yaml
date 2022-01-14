@@ -60,12 +60,14 @@ steps:
     - '-c'
     - |
       echo "Packer Build ..."
+      ls -l
+      cat current_images.txt
       IMAGE_NAME=$(cat latest_image.txt)
       if ! grep -q "ac9025-test-$${IMAGE_NAME}" "$current_images.txt"; then 
         /usr/bin/packer build -debug -var image_name=$${IMAGE_NAME} \
         -var project_id=$PROJECT_ID -var subnetwork=${_SUBNETWORK} \
         -var service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
-        centos-8-4-2105.pkr.hcl;
+        centos-8-4-2105.pkr.hcl
       fi
   env:
     - 'PACKER_LOG=1'
