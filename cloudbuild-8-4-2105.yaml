@@ -59,9 +59,6 @@ steps:
   args:
     - '-c'
     - |
-      echo "Packer Build ..."
-      ls -l
-      cat current_images.txt
       IMAGE_NAME=$(cat latest_image.txt)
       if ! grep -q "ac9025-test-$${IMAGE_NAME}" current_images.txt 
       then 
