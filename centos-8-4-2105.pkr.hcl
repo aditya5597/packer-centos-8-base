@@ -130,7 +130,7 @@ source "googlecompute" "centos-8-4-2105" {
   disable_default_service_account = "${var.disable_default_service_account}"
   disk_size                       = "${var.disk_size}"
   image_family                    = "${var.image_family}"
-  image_name                      = "ac9025-test-${var.image_name}-latest"
+  image_name                      = "ac9025-test-${var.image_name}"
   machine_type                    = "${var.machine_type}"
   project_id                      = "${var.project_id}"
   service_account_email           = "${var.service_account_email}"

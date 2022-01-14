@@ -1,4 +1,4 @@
-# Perform a Packer build based on the `packer.json` configuration. 
+\# Perform a Packer build based on the `packer.json` configuration. 
 # # To run the build manually do the following,
 #      $ `gcloud builds submit --config=cloudbuild.yaml .`
 #
@@ -51,7 +51,7 @@ steps:
   - '-c'
   - |
     gcloud compute images describe-from-family centos-8 --project=centos-cloud --format="value(name)" > latest_image.txt
-    gcloud compute imges list --filter=ac9025 --format='value(name)' > current_images.txt
+    gcloud compute images list --filter=ac9025 --format='value(name)' > current_images.txt
 
 # Step 4
 - name: 'gcr.io/$PROJECT_ID/packer:1.7.6'
@@ -61,12 +61,7 @@ steps:
     - |
       echo "Packer Build ..."
       IMAGE_NAME=$(cat latest_image.txt)
-      if ! grep -q $${IMAGE_NAME} "$current_images.txt"; then 
-        /usr/bin/packer build -debug -var image_name=$${IMAGE_NAME} \
-        -var project_id=$PROJECT_ID -var subnetwork=${_SUBNETWORK} \
-        -var service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com \
-        centos-8-4-2105.pkr.hcl;
-      fi
+      /usr/bin/packer build -debug -var image_name=$${IMAGE_NAME} -var project_id=$PROJECT_ID -var subnetwork=${_SUBNETWORK} -var service_account_email=project-service-account@${PROJECT_ID}.iam.gserviceaccount.com centos-8-4-2105.pkr.hcl
   env:
     - 'PACKER_LOG=1'
   volumes:
